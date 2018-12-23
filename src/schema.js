@@ -30,6 +30,7 @@ type Engineer implements Employee {
   email: String
   salary: String
   department: Department
+  projects: [Project]
 }
 
 type HumanResource implements Employee {
@@ -41,7 +42,8 @@ type HumanResource implements Employee {
   avatar: String
   email: String
   salary: String
-  department: Department
+  department: Department,
+  friends: [String]
 }
 
 type MarketingExec implements Employee {
@@ -53,10 +55,16 @@ type MarketingExec implements Employee {
   avatar: String
   email: String
   salary: String
-  department: Department
+  department: Department,
+  bonus: String
 }
 
 type Department {
+  id: Int
+  name: String
+}
+
+type Project {
   id: Int
   name: String
 }

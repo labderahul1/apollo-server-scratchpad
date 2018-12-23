@@ -31,6 +31,9 @@ const resolvers = {
   Engineer: {
     department(employee) {
       return Departments.find(department => department.id === employee.department);
+    },
+    projects(employee) {
+      return employee.projects.map(project => Projects.find(p => p.id === project));
     }
   },
   HumanResource: {
