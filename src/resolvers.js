@@ -26,8 +26,22 @@ const resolvers = {
     searchEmployee(_, { department, name }) {
       const results = Employees.filter(employee => employee.department === department && employee.firstName.startsWith(name));
       return results;
-    } 
-  },
+		},
+		getEmployeeById(_, { id }) {
+			return Employees.find(e => e.id === id );
+		}
+	},
+	Mutation: {
+		editEmployee(_, { employee: emp }) {
+			console.log(emp);
+			let employee = Employees.find(e => e.id === emp.id);
+			employee.firstName = emp.firstName;
+			employee.lastName = emp.lastName;
+			employee.designation = emp.designation;
+			employee.salary = emp.salary;
+			return employee;
+		}
+	},
   Engineer: {
     department(employee) {
       return Departments.find(department => department.id === employee.department);
