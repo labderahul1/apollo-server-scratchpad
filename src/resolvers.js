@@ -33,7 +33,6 @@ const resolvers = {
 	},
 	Mutation: {
 		editEmployee(_, { employee: emp }) {
-			console.log(emp);
 			let employee = Employees.find(e => e.id === emp.id);
 			employee.firstName = emp.firstName;
 			employee.lastName = emp.lastName;
