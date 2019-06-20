@@ -3,95 +3,44 @@ let resolvers = require("./resolvers");
 
 const typeDefs = `
 type Query {
-  getAllEmployees: [Employee],
-	getEmployees(first: Int): [Employee],
-	getEmployeeById(id: String): Employee,
-  searchEmployee(department: Int, name: String): [Employee]
+  getAllTodoList: [Todo]
+  getToDoById(todoId: String): Todo
+}
+
+type Todo {
+  id: String
+  label: String
+  todoActivity: [Activity]
+  description: String
+  todoStatus: String
+}
+
+type Activity {
+  id: String
+  label: String
+  status: String
 }
 
 type Mutation {
-	editEmployee(employee: EditEmployeeInput): Employee
+  createTodo(todoInput: addTodo): Todo
+  addTodoActivity(id: String, todoActivity: activity): Activity
+  updateTodo(id: String, updateInput: addTodo): Todo
+  deleteTodo(todoId: String): Todo
 }
 
-interface Employee {
+input activity {
   id: String
-  firstName: String
-  lastName: String
-  gender: String
-  designation: String
-  avatar: String
-  email: String
-  salary: String
-	department: Department
-	address: Address
+  label: String
+  status: String
 }
 
-type Engineer implements Employee {
-  id: String
-  firstName: String
-  lastName: String
-  gender: String
-  designation: String
-  avatar: String
-  email: String
-  salary: String
-	department: Department
-	address: Address  projects: [Project]
-}
-
-type HumanResource implements Employee {
-  id: String
-  firstName: String
-  lastName: String
-  gender: String
-  designation: String
-  avatar: String
-  email: String
-  salary: String
-	department: Department
-	address: Address
-  friends: [String]
-}
-
-type MarketingExec implements Employee {
-  id: String
-  firstName: String
-  lastName: String
-  gender: String
-  designation: String
-  avatar: String
-  email: String
-  salary: String
-	department: Department
-	address: Address
-  bonus: String
-}
-
-type Department {
-  id: Int
-  name: String
-}
-
-type Project {
-  id: Int
-  name: String
-}
-
-type Address {
-	city: String
-	state: String
-	country: String
-}
-
-input EditEmployeeInput {
+input addTodo {
 	id: String
-	firstName: String
-	lastName: String
-	designation: String
-	salary: String
+  label: String
+  description: String
+  todoActivity: [activity]
+  todoStatus: String
 }
-
-
 `;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });

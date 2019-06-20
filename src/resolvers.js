@@ -1,64 +1,50 @@
-const Employees = require( './employees');
-const Departments = require( './departments');
-const Projects = require( './projects');
+const Todos = require( './todos');
+// const Category = require( './category');
+// const Projects = require( './projects');
 
 const resolvers = {
-  Employee: {
-    __resolveType(obj, context, info) {
-        if (obj.department === 1) {
-          return 'Engineer';
-        } else if (obj.department === 2) {
-          return 'HumanResource';
-        } else {
-          return 'MarketingExec';
-        }
-
-        return null;
-    }
-  },
   Query: {
-    getAllEmployees(_, args) {
-      return Employees;
+    getAllTodoList(_, args) {
+      // console.log("obj", Todos);
+      return Todos;
+  },
+  getToDoById(_, { todoId }) {
+    const todo = Todos.find((element) => element.id === todoId );
+    return todo;
+}
+},
+  Mutation: {
+		createTodo(_, { todoInput: {id, label, todoStatus, description, todoActivity}, todoInput}) {
+      console.log(todoInput, 'todoInput');
+      let obj = new Object();      
+      obj.id = id;
+      obj.label = label;
+      obj.todoStatus = todoStatus;
+      obj.todoActivity = todoActivity;
+      obj.description = description;
+      Todos.push(obj);
+			return {id, label, todoStatus, description, todoActivity};
     },
-    getEmployees(_, { first: limit }) {
-      return Employees.slice(0, limit);
+    addTodoActivity(_, { id, todoActivity }) {  
+      // addTodoActivity(_, _args) {      
+      const todo = Todos.find((element) => element.id === id );      
+      console.log(id, todoActivity, 'todo');
+      todo.todoActivity.push(todoActivity);
+      return todoActivity;
     },
-    searchEmployee(_, { department, name }) {
-      const results = Employees.filter(employee => employee.department === department && employee.firstName.startsWith(name));
-      return results;
-		},
-		getEmployeeById(_, { id }) {
-			return Employees.find(e => e.id === id );
+    updateTodo(_, { id, updateInput }) {  
+      const todoIndex = Todos.findIndex((element) => element.id === id );   
+      console.log(todoIndex, 'todoIndex', id);
+      Todos[todoIndex] = updateInput;
+      return Todos;
+    },
+    deleteTodo(_, { todoId: id }) {
+      console.log(id);
+      let deletedItem = Todos.splice(0, 1)[0];
+      console.log(deletedItem, 'deletedItem')
+			return deletedItem;
 		}
 	},
-	Mutation: {
-		editEmployee(_, { employee: emp }) {
-			let employee = Employees.find(e => e.id === emp.id);
-			employee.firstName = emp.firstName;
-			employee.lastName = emp.lastName;
-			employee.designation = emp.designation;
-			employee.salary = emp.salary;
-			return employee;
-		}
-	},
-  Engineer: {
-    department(employee) {
-      return Departments.find(department => department.id === employee.department);
-    },
-    projects(employee) {
-      return employee.projects.map(project => Projects.find(p => p.id === project));
-    }
-  },
-  HumanResource: {
-    department(employee) {
-      return Departments.find(department => department.id === employee.department);
-    }
-  },
-  MarketingExec: {
-    department(employee) {
-      return Departments.find(department => department.id === employee.department);
-    }
-  }
 };
 
 module.exports = resolvers;
